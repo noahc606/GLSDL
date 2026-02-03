@@ -1,5 +1,6 @@
 .cache
 /build
+/build-release
 /include/nch/cpp-utils
 /include/nch/math-utils
 /include/nch/sdl-utils
