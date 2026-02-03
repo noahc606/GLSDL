@@ -88,10 +88,8 @@ set(NCH_GLSDL_OPENGL_BACKEND 0)  # 0 = SDL Backend, 1 = OpenGL Backend
 ### Build with CMake
 
 ```bash
-mkdir -p build
-cd build
-cmake ..
-make
+cmake -Bbuild -S.
+cmake --build build
 ```
 
 The executable will be generated in the `bin/` directory.
