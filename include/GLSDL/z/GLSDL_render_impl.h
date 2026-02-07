@@ -139,6 +139,7 @@ public:
     glm::vec4 getSDL_TexColorMod() const;
     SDL_Color getSDL_TexColorModRaw() const;
     SDL_BlendMode getSDL_BlendMode() const;
+    uint32_t getSDL_PixelFormat() const;
     int queryTextureAlphaMod(uint8_t* a) const;
     int queryTextureColorMod(uint8_t* r, uint8_t* g, uint8_t* b) const;
     int queryTextureBlendMode(SDL_BlendMode* sdlBlendMode) const;

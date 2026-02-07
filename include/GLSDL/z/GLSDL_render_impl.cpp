@@ -1061,8 +1061,7 @@ GLSDL_Texture::GLSDL_Texture(GLSDL_Renderer* glsdlRenderer, SDL_Surface* surface
 	/* Populate GL texture by converting SDL surface to the proper pixel format */
     glBindTexture(GL_TEXTURE_2D, glTexture); {
         //Create final surface (which may be converted) whose pixels will be used
-		SDL_Surface* finalSurf = SDL_DuplicateSurface(surface);
-        finalSurf = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+		SDL_Surface* finalSurf = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
         if(finalSurf==NULL) {
             Log::errorv(__PRETTY_FUNCTION__, "IMG Error", IMG_GetError());
             failedConstruction = true; return;
@@ -1184,6 +1183,13 @@ SDL_Color GLSDL_Texture::getSDL_TexColorModRaw() const {
 SDL_BlendMode GLSDL_Texture::getSDL_BlendMode() const {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     return sdlBlendMode;
+#else
+    throw std::invalid_argument("Function only usable with NCH_GLSDL_OPENGL_BACKEND=1");
+#endif
+}
+uint32_t GLSDL_Texture::getSDL_PixelFormat() const {
+#if NCH_GLSDL_OPENGL_BACKEND>=1
+    return sdlPixelFormat;
 #else
     throw std::invalid_argument("Function only usable with NCH_GLSDL_OPENGL_BACKEND=1");
 #endif
