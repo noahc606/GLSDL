@@ -1,4 +1,5 @@
 #include "GLSDL.h"
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <nch/cpp-utils/log.h>
 #include <SDL2/SDL.h>
 using namespace nch;
@@ -43,3 +44,4 @@ int GLSDL_Init(uint32_t sdlFlags) {
 void GLSDL_Quit() {
     return GLSDL::quit();
 }
+#endif

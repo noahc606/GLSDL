@@ -1,4 +1,5 @@
 #include "GLSDL_render_impl.h"
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <SDL2/SDL_image.h>
 #include <nch/cpp-utils/log.h>
 #include <nch/math-utils/box2.h>
@@ -1596,3 +1597,4 @@ void GLSDL_Texture::createGL_Texture(uint32_t sdlPixelFormat, int sdlAccessType,
     throw std::invalid_argument("Function only usable with NCH_GLSDL_OPENGL_BACKEND=1");
 #endif
 }
+#endif

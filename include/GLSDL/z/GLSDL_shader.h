@@ -1,4 +1,5 @@
 #pragma once
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <GL/glew.h>
 #include <string>
 
@@ -19,3 +20,4 @@ private:
 
     GLuint id;
 };
+#endif

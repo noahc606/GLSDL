@@ -1,4 +1,5 @@
 #pragma once
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <cstdint>
 #include "GLSDL_render.h"
 #include "GLSDL_shader.h"
@@ -13,3 +14,7 @@ private:
 
 int GLSDL_Init(uint32_t sdlFlags);
 void GLSDL_Quit();
+
+#else
+#include "GLSDL_SDL_defs.h"
+#endif

@@ -1,4 +1,5 @@
 #include "GLSDL_render.h"
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -178,3 +179,5 @@ int GLSDL_GetTextureBlendMode(GLSDL_Texture* texture, SDL_BlendMode* sdlBlendMod
 int GLSDL_QueryTexture(GLSDL_Texture* texture, uint32_t* format, int* access, int* w, int* h) {
     return texture->query(format, access, w, h);
 }
+
+#endif

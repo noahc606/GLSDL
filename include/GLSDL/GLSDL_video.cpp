@@ -1,4 +1,5 @@
 #include "GLSDL_video.h"
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <SDL2/SDL.h>
 
 GLSDL_Window::GLSDL_Window(SDL_Window* sdlwindow) {
@@ -24,3 +25,5 @@ GLSDL_Window* GLSDL_CreateWindow(const std::string& title, int x, int y, int w, 
 
     return ret;
 }
+
+#endif

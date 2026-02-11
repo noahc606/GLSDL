@@ -1,5 +1,6 @@
 #pragma once
 #include "z/GLSDL_render_impl.h"
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 
 void GLSDL_GL_SaveState(GLSDL_Renderer* renderer);
 void GLSDL_GL_RestoreState(GLSDL_Renderer* renderer);
@@ -46,3 +47,5 @@ int GLSDL_GetTextureAlphaMod(GLSDL_Texture* texture, uint8_t* a);
 int GLSDL_SetTextureBlendMode(GLSDL_Texture* texture, SDL_BlendMode sdlBlendMode);
 int GLSDL_GetTextureBlendMode(GLSDL_Texture* texture, SDL_BlendMode* sdlBlendMode);
 int GLSDL_QueryTexture(GLSDL_Texture* texture, uint32_t* format, int* access, int* w, int* h);
+
+#endif

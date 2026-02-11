@@ -1,4 +1,5 @@
 #include "GLSDL_shader.h"
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <nch/cpp-utils/file-utils.h>
 #include <nch/cpp-utils/log.h>
 using namespace nch;
@@ -127,3 +128,4 @@ void GLSDL_Shader::compileErrors(GLuint shader, std::string type)
     throw std::invalid_argument("Function only usable with NCH_GLSDL_OPENGL_BACKEND=1");
 #endif
 }
+#endif

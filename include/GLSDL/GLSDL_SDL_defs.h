@@ -1,0 +1,59 @@
+#pragma once
+#ifndef NCH_GLSDL_OPENGL_BACKEND
+#include <SDL2/SDL.h>
+
+#define GLSDL_Renderer SDL_Renderer
+#define GLSDL_Window SDL_Window
+#define GLSDL_Texture SDL_Texture
+
+#define GLSDL_Init SDL_Init
+#define GLSDL_Quit SDL_Quit
+#define GLSDL_CreateWindow SDL_CreateWindow
+
+#define GLSDL_GL_SaveState(...) ((void)0)
+#define GLSDL_GL_RestoreState(...) ((void)0)
+
+#define GLSDL_CreateRenderer SDL_CreateRenderer
+#define GLSDL_RenderClear SDL_RenderClear
+#define GLSDL_RenderPresent SDL_RenderPresent
+#define GLSDL_RenderReadPixels SDL_RenderReadPixels
+#define GLSDL_SetRenderDrawColor SDL_SetRenderDrawColor
+#define GLSDL_GetRenderDrawColor SDL_GetRenderDrawColor
+#define GLSDL_SetRenderDrawBlendMode SDL_SetRenderDrawBlendMode
+#define GLSDL_GetRenderDrawBlendMode SDL_GetRenderDrawBlendMode
+#define GLSDL_RenderSetClipRect SDL_RenderSetClipRect
+#define GLSDL_RenderIsClipEnabled SDL_RenderIsClipEnabled
+#define GLSDL_RenderGetClipRect SDL_RenderGetClipRect
+#define GLSDL_RenderSetViewport SDL_RenderSetViewport
+#define GLSDL_RenderGetViewport SDL_RenderGetViewport
+#define GLSDL_RenderFillRectF SDL_RenderFillRectF
+#define GLSDL_RenderFillRect SDL_RenderFillRect
+#define GLSDL_RenderDrawRectF SDL_RenderDrawRectF
+#define GLSDL_RenderDrawRect SDL_RenderDrawRect
+#define GLSDL_RenderDrawLineF SDL_RenderDrawLineF
+#define GLSDL_RenderDrawLine SDL_RenderDrawLine
+#define GLSDL_RenderDrawPointF SDL_RenderDrawPointF
+#define GLSDL_RenderDrawPoint SDL_RenderDrawPoint
+#define GLSDL_RenderGeometry SDL_RenderGeometry
+#define GLSDL_CreateTexture SDL_CreateTexture
+#define GLSDL_CreateTextureFromSurface SDL_CreateTextureFromSurface
+#define GLSDL_UpdateTexture SDL_UpdateTexture
+#define GLSDL_LockTexture SDL_LockTexture
+#define GLSDL_UnlockTexture SDL_UnlockTexture
+#define GLSDL_DestroyTexture SDL_DestroyTexture
+#define GLSDL_RenderCopyExF SDL_RenderCopyExF
+#define GLSDL_RenderCopyEx SDL_RenderCopyEx
+#define GLSDL_RenderCopyF SDL_RenderCopyF
+#define GLSDL_RenderCopy SDL_RenderCopy
+#define GLSDL_SetRenderTarget SDL_SetRenderTarget
+#define GLSDL_GetRenderTarget SDL_GetRenderTarget
+#define GLSDL_SetTextureColorMod SDL_SetTextureColorMod
+#define GLSDL_GetTextureColorMod SDL_GetTextureColorMod
+#define GLSDL_SetTextureAlphaMod SDL_SetTextureAlphaMod
+#define GLSDL_GetTextureAlphaMod SDL_GetTextureAlphaMod
+#define GLSDL_SetTextureBlendMode SDL_SetTextureBlendMode
+#define GLSDL_GetTextureBlendMode SDL_GetTextureBlendMode
+#define GLSDL_QueryTexture SDL_QueryTexture
+
+
+#endif

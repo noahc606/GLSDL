@@ -1,4 +1,5 @@
 #include "GLSDL_render_impl.h"
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <glm/ext.hpp>
 #include <stdexcept>
 #include <iostream>
@@ -358,3 +359,4 @@ void GLSDL_Renderer::sdrUniformApplyTexture(bool applyTexture) {
     throw std::invalid_argument("Function only usable with NCH_GLSDL_OPENGL_BACKEND=1");
 #endif
 }
+#endif

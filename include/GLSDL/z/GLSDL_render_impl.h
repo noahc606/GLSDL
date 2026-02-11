@@ -1,4 +1,5 @@
 #pragma once
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <GL/glew.h>
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
@@ -193,3 +194,4 @@ private:
     SDL_Rect effectiveRenderArea = {0, 0, -1, -1};
 #endif
 };
+#endif

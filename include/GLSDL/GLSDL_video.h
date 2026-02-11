@@ -1,4 +1,5 @@
 #pragma once
+#ifdef NCH_GLSDL_OPENGL_BACKEND
 #include <SDL2/SDL_video.h>
 #include <cstdint>
 #include <string>
@@ -13,3 +14,4 @@ private:
 };
 
 GLSDL_Window* GLSDL_CreateWindow(const std::string& title, int x, int y, int w, int h, uint32_t flags);
+#endif
