@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <vector>
-#include "GLSDL_pixels.h"
 #include "GLSDL_video.h"
 #include "GLSDL_shader.h"
 
