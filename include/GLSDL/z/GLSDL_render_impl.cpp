@@ -355,6 +355,59 @@ void GLSDL_Renderer::renderPresent() {
 #endif
     
 }
+
+SDL_Surface* GLSDL_Renderer::surfaceReadPixels(GLuint objID, int objW, int objH, int objBytesPerPx) {
+    SDL_Surface* retSurf = SDL_CreateRGBSurfaceWithFormat(0, objW, objH, 32, SDL_PIXELFORMAT_RGBA8888);
+    int pitch = retSurf->pitch;
+
+    int rtW = objW;
+    int rtH = objH;
+    SDL_Rect rrect = {0, 0, rtW, rtH};
+
+    //Create pixel array 'tempPixels' copied from texture
+    unsigned char* tempPixels = new unsigned char[rtW*rtH*objBytesPerPx];  // RGBA format
+    glBindTexture(GL_TEXTURE_2D, objID); {
+        glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, tempPixels);
+    } glBindTexture(GL_TEXTURE_2D, 0);
+
+
+    int ret = 0;
+    SDL_PixelFormatEnum tempPixelsFmt = SDL_PIXELFORMAT_RGBA32;
+    for(;;) {
+        //Build 'tempSurf' which is an ABGR surface copy of the entire render target.
+        SDL_Surface* tempSurf = SDL_CreateRGBSurfaceWithFormatFrom(tempPixels, rtW, rtH, 32, rtW*4, tempPixelsFmt);
+        if(!tempSurf) {
+            delete[] tempPixels;
+            ret = -1; break;
+        }
+        //Build 'subSurf' which is a surface fitting the desired 'rect'.
+        SDL_Surface* subSurf = SDL_CreateRGBSurfaceWithFormat(0, rrect.w, rrect.h, 32, tempPixelsFmt);
+        if(!subSurf) {
+            SDL_FreeSurface(tempSurf);
+            delete[] tempPixels;
+            ret = -2; break;
+        }
+        //Copy the appropriate area from 'tempSurf' to 'subSurf'. Discard 'tempSurf' and 'tempPixels'.
+        if(SDL_BlitSurface(tempSurf, &rrect, subSurf, NULL)!=0) {
+            SDL_FreeSurface(tempSurf);
+            delete[] tempPixels;
+            ret = -3; break;
+        }
+        SDL_FreeSurface(tempSurf);
+        delete[] tempPixels;
+        //Finally, convert 'subSurf' to the needed format & store into 'retSurf'. Discard 'subSurf'.
+        retSurf = SDL_ConvertSurfaceFormat(subSurf, SDL_PIXELFORMAT_RGBA8888, 0);
+        SDL_FreeSurface(subSurf);
+        if(!retSurf) { ret = -4; break; }
+        //Ensure the provided pitch is correct
+        if(pitch!=retSurf->w*retSurf->format->BytesPerPixel && pitch!=retSurf->pitch) {
+            ret = -5; break;
+        }
+        break;
+    }
+
+    return retSurf;
+}
 int GLSDL_Renderer::renderReadPixels(const SDL_Rect* rect, uint32_t format, void* pixels, int pitch) {
     #if NCH_GLSDL_OPENGL_BACKEND>=1
     int rtW = getRenderTargetW();

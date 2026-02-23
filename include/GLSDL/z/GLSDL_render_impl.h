@@ -35,6 +35,7 @@ public:
     static void glRestoreState();
     int renderClear();
     void renderPresent();
+    static SDL_Surface* surfaceReadPixels(GLuint objID, int objW, int objH, int objBytesPerPx);
     int renderReadPixels(const SDL_Rect* rect, uint32_t format, void* pixels, int pitch);
     int setRenderDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
     int setRenderDrawBlendMode(SDL_BlendMode blendMode);
