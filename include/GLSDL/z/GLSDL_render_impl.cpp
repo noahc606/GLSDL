@@ -439,7 +439,8 @@ int GLSDL_Renderer::renderReadPixels(const SDL_Rect* rect, uint32_t format, void
         }}
     }
 
-
+    int errPitch = 0;
+    int errPitchExp = 0;
     int ret = 0;
     SDL_Surface* retSurf;
     SDL_PixelFormatEnum tempPixelsFmt = SDL_PIXELFORMAT_RGBA32;
@@ -471,6 +472,8 @@ int GLSDL_Renderer::renderReadPixels(const SDL_Rect* rect, uint32_t format, void
         if(!retSurf) { ret = -4; break; }
         //Ensure the provided pitch is correct
         if(pitch!=retSurf->w*retSurf->format->BytesPerPixel && pitch!=retSurf->pitch) {
+            errPitch = pitch;
+            errPitchExp = retSurf->w*retSurf->format->BytesPerPixel;
             ret = -5; break;
         }
         break;
@@ -488,7 +491,7 @@ int GLSDL_Renderer::renderReadPixels(const SDL_Rect* rect, uint32_t format, void
             case -2: { Log::error(__PRETTY_FUNCTION__, "Failed to create ABGR subsurface"); } break;
             case -3: { Log::error(__PRETTY_FUNCTION__, "Failed to blit temp surface to subsurface"); } break;
             case -4: { Log::error(__PRETTY_FUNCTION__, "Failed to convert subsurface to final surface"); } break;
-            case -5: { Log::error(__PRETTY_FUNCTION__, "Incorrect pitch detected, does not match with width*bytesPerPixel"); }
+            case -5: { Log::error(__PRETTY_FUNCTION__, "Incorrect pitch %d detected, does not match with width*bytesPerPixel==%d", errPitch, errPitchExp); }
         }
     }
 
@@ -616,7 +619,7 @@ int GLSDL_Renderer::setRenderTargetViewport(const SDL_Rect* rect) {
     return SDL_RenderSetViewport(sdlRenderer, rect);
 #endif
 }
-int GLSDL_Renderer::renderFillRectF(SDL_FRect* rect)
+int GLSDL_Renderer::fillRectF(SDL_FRect* rect)
 {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     SDL_FRect dst;
@@ -676,17 +679,17 @@ int GLSDL_Renderer::renderFillRectF(SDL_FRect* rect)
     }
 #endif
 }
-int GLSDL_Renderer::renderFillRect(SDL_Rect* rect) {
+int GLSDL_Renderer::fillRect(SDL_Rect* rect) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
-    if(rect==nullptr) { return renderFillRectF(nullptr); } else {
+    if(rect==nullptr) { return fillRectF(nullptr); } else {
         SDL_FRect dst = { (float)rect->x, (float)rect->y, (float)rect->w, (float)rect->h };
-        return renderFillRectF(&dst);
+        return fillRectF(&dst);
     }
 #else
     return SDL_RenderFillRect(sdlRenderer, rect);
 #endif
 }
-int GLSDL_Renderer::renderDrawRectF(SDL_FRect* rect)
+int GLSDL_Renderer::drawRectF(SDL_FRect* rect)
 {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     SDL_FRect dst;
@@ -742,18 +745,18 @@ int GLSDL_Renderer::renderDrawRectF(SDL_FRect* rect)
     return SDL_RenderDrawRectF(sdlRenderer, rect);
 #endif
 }
-int GLSDL_Renderer::renderDrawRect(SDL_Rect* rect)
+int GLSDL_Renderer::drawRect(SDL_Rect* rect)
 {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
-    if(rect==nullptr) { return renderDrawRectF(nullptr); } else {
+    if(rect==nullptr) { return drawRectF(nullptr); } else {
         SDL_FRect dst = { (float)rect->x, (float)rect->y, (float)rect->w, (float)rect->h };
-        return renderDrawRectF(&dst);
+        return drawRectF(&dst);
     }
 #else
     return SDL_RenderDrawRect(sdlRenderer, rect);
 #endif
 }
-int GLSDL_Renderer::renderDrawLineF(float x1, float y1, float x2, float y2) {
+int GLSDL_Renderer::drawLineF(float x1, float y1, float x2, float y2) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     if(!renderTarget) {
         y1 = (float)getRenderTargetH()-y1;
@@ -798,14 +801,14 @@ int GLSDL_Renderer::renderDrawLineF(float x1, float y1, float x2, float y2) {
     return SDL_RenderDrawLineF(sdlRenderer, x1, y1, x2, y2);
 #endif
 }
-int GLSDL_Renderer::renderDrawLine(int x1, int y1, int x2, int y2) {
+int GLSDL_Renderer::drawLine(int x1, int y1, int x2, int y2) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
-    return renderDrawLineF(x1, y1, x2, y2);
+    return drawLineF(x1, y1, x2, y2);
 #else
     return SDL_RenderDrawLine(sdlRenderer, x1, y1, x2, y2);    
 #endif
 }
-int GLSDL_Renderer::renderDrawPointF(float x, float y) {
+int GLSDL_Renderer::drawPointF(float x, float y) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     if(!renderTarget) {
         y = (float)getRenderTargetH()-y;
@@ -848,14 +851,14 @@ int GLSDL_Renderer::renderDrawPointF(float x, float y) {
     return SDL_RenderDrawPointF(sdlRenderer, x, y);    
 #endif
 }
-int GLSDL_Renderer::renderDrawPoint(int x, int y) {
+int GLSDL_Renderer::drawPoint(int x, int y) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
-    return renderDrawPointF(x, y);
+    return drawPointF(x, y);
 #else
     return SDL_RenderDrawPoint(sdlRenderer, x, y);    
 #endif
 }
-int GLSDL_Renderer::renderCopyExF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect, double angle, SDL_FPoint* center, SDL_RendererFlip flip) {
+int GLSDL_Renderer::copyExF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect, double angle, SDL_FPoint* center, SDL_RendererFlip flip) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     GLSDL_Texture* glsdlTexture = reinterpret_cast<GLSDL_Texture*>(texture);
 
@@ -881,9 +884,10 @@ int GLSDL_Renderer::renderCopyExF(void* texture, SDL_Rect* srcrect, SDL_FRect* d
         float texH = glsdlTexture->getGL_TexHeight();
         src = {srcrect->x/texW, srcrect->y/texH, srcrect->w/texW, srcrect->h/texH};
     }
+    //Fix upside down texture to texture rendering
     if(renderTarget!=nullptr) {
-        src.y += src.h;
-        src.h *= -1.f;
+        dst.y = getRenderTargetH()-dst.y;
+        dst.h *= -1;
     }
 
     //Define the rectangle's vertices based on the given parameters.
@@ -942,7 +946,7 @@ int GLSDL_Renderer::renderCopyExF(void* texture, SDL_Rect* srcrect, SDL_FRect* d
     return SDL_RenderCopyExF(sdlRenderer, reinterpret_cast<GLSDL_Texture*>(texture)->toSDL_Texture(), s, d, angle, center, flip);
 #endif
 }
-int GLSDL_Renderer::renderCopyEx(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, double angle, SDL_Point* center, SDL_RendererFlip flip) {
+int GLSDL_Renderer::copyEx(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, double angle, SDL_Point* center, SDL_RendererFlip flip) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     GLSDL_Texture* glsdlTexture = reinterpret_cast<GLSDL_Texture*>(texture);
 
@@ -968,9 +972,10 @@ int GLSDL_Renderer::renderCopyEx(void* texture, SDL_Rect* srcrect, SDL_Rect* dst
         float texH = glsdlTexture->getGL_TexHeight();
         src = {srcrect->x/texW, srcrect->y/texH, srcrect->w/texW, srcrect->h/texH};
     }
+    //Fix upside down texture to texture rendering
     if(renderTarget!=nullptr) {
-        src.y += src.h;
-        src.h *= -1.f;
+        dst.y = getRenderTargetH()-dst.y;
+        dst.h *= -1;
     }
 
     //Define the rectangle's vertices based on the given parameters.
@@ -1019,13 +1024,13 @@ int GLSDL_Renderer::renderCopyEx(void* texture, SDL_Rect* srcrect, SDL_Rect* dst
     return SDL_RenderCopyEx(sdlRenderer, reinterpret_cast<GLSDL_Texture*>(texture)->toSDL_Texture(), srcrect, dstrect, angle, center, flip);
 #endif
 }
-int GLSDL_Renderer::renderCopyF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect) {
-    return renderCopyExF(texture, srcrect, dstrect, 0, nullptr, SDL_FLIP_NONE);
+int GLSDL_Renderer::copyF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect) {
+    return copyExF(texture, srcrect, dstrect, 0, nullptr, SDL_FLIP_NONE);
 }
-int GLSDL_Renderer::renderCopy(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect) {
-    return renderCopyEx(texture, srcrect, dstrect, 0, nullptr, SDL_FLIP_NONE);
+int GLSDL_Renderer::copy(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect) {
+    return copyEx(texture, srcrect, dstrect, 0, nullptr, SDL_FLIP_NONE);
 }
-int GLSDL_Renderer::renderGeometry(void* texture, const SDL_Vertex* vertices, int numVerts, const int* indices, int numInds) {
+int GLSDL_Renderer::geo(void* texture, const SDL_Vertex* vertices, int numVerts, const int* indices, int numInds) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     GLSDL_Texture* glsdlTexture = reinterpret_cast<GLSDL_Texture*>(texture);
 

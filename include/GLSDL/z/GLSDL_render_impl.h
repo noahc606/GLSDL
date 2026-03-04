@@ -43,19 +43,19 @@ public:
     int setRenderTargetClipRect(const SDL_Rect* rect);
     int setRenderTargetViewport(const SDL_Rect* rect);
 
-    int renderFillRectF(SDL_FRect* rect);
-    int renderFillRect(SDL_Rect* rect);
-    int renderDrawRectF(SDL_FRect* rect);
-    int renderDrawRect(SDL_Rect* rect);
-    int renderDrawLineF(float x1, float y1, float x2, float y2);
-    int renderDrawLine(int x1, int y1, int x2, int y2);
-    int renderDrawPointF(float x, float y);
-    int renderDrawPoint(int x, int y);
-    int renderCopyExF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect, double angle, SDL_FPoint* center, SDL_RendererFlip flip);
-    int renderCopyEx(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, double angle, SDL_Point* center, SDL_RendererFlip flip);
-    int renderCopyF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect);
-    int renderCopy(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect);
-    int renderGeometry(void* texture, const SDL_Vertex* vertices, int numVerts, const int* indices, int numInds);
+    int fillRectF(SDL_FRect* rect);
+    int fillRect(SDL_Rect* rect);
+    int drawRectF(SDL_FRect* rect);
+    int drawRect(SDL_Rect* rect);
+    int drawLineF(float x1, float y1, float x2, float y2);
+    int drawLine(int x1, int y1, int x2, int y2);
+    int drawPointF(float x, float y);
+    int drawPoint(int x, int y);
+    int copyExF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect, double angle, SDL_FPoint* center, SDL_RendererFlip flip);
+    int copyEx(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, double angle, SDL_Point* center, SDL_RendererFlip flip);
+    int copyF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect);
+    int copy(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect);
+    int geo(void* texture, const SDL_Vertex* vertices, int numVerts, const int* indices, int numInds);
 
 private:
     //Private GL state modification

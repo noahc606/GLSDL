@@ -66,39 +66,39 @@ void GLSDL_RenderGetViewport(GLSDL_Renderer* renderer, SDL_Rect* rect) {
 }
 int GLSDL_RenderFillRectF(GLSDL_Renderer* renderer, SDL_FRect* rect) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderFillRectF(rect);
+    return renderer->fillRectF(rect);
 }
 int GLSDL_RenderFillRect(GLSDL_Renderer* renderer, SDL_Rect* rect) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderFillRect(rect);
+    return renderer->fillRect(rect);
 }
 int GLSDL_RenderDrawRectF(GLSDL_Renderer* renderer, SDL_FRect* rect) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderDrawRectF(rect);
+    return renderer->drawRectF(rect);
 }
 int GLSDL_RenderDrawRect(GLSDL_Renderer* renderer, SDL_Rect* rect) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderDrawRect(rect);
+    return renderer->drawRect(rect);
 }
 int GLSDL_RenderDrawLineF(GLSDL_Renderer* renderer, float x1, float y1, float x2, float y2) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderDrawLineF(x1, y1, x2, y2);
+    return renderer->drawLineF(x1, y1, x2, y2);
 }
 int GLSDL_RenderDrawLine(GLSDL_Renderer* renderer, int x1, int y1, int x2, int y2) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderDrawLine(x1, y1, x2, y2);
+    return renderer->drawLine(x1, y1, x2, y2);
 }
 int GLSDL_RenderDrawPointF(GLSDL_Renderer* renderer, float x, float y) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderDrawPointF(x, y);
+    return renderer->drawPointF(x, y);
 }
 int GLSDL_RenderDrawPoint(GLSDL_Renderer* renderer, int x, int y) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderDrawPoint(x, y);
+    return renderer->drawPoint(x, y);
 }
 int GLSDL_RenderGeometry(GLSDL_Renderer* renderer, GLSDL_Texture* texture, const SDL_Vertex* vertices, int num_vertices, const int* indices, int num_indices) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderGeometry(texture, vertices, num_vertices, indices, num_indices);
+    return renderer->geo(texture, vertices, num_vertices, indices, num_indices);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,19 +137,19 @@ void GLSDL_DestroyTexture(GLSDL_Texture* texture) {
 }
 int GLSDL_RenderCopyExF(GLSDL_Renderer* renderer, GLSDL_Texture* texture, SDL_Rect* srcrect, SDL_FRect* dstrect, double angle, SDL_FPoint* center, SDL_RendererFlip flip) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderCopyExF(texture, srcrect, dstrect, angle, center, flip);
+    return renderer->copyExF(texture, srcrect, dstrect, angle, center, flip);
 }
 int GLSDL_RenderCopyEx(GLSDL_Renderer* renderer, GLSDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, double angle, SDL_Point* center, SDL_RendererFlip flip) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderCopyEx(texture, srcrect, dstrect, angle, center, flip);
+    return renderer->copyEx(texture, srcrect, dstrect, angle, center, flip);
 }
 int GLSDL_RenderCopyF(GLSDL_Renderer* renderer, GLSDL_Texture* texture, SDL_Rect* srcrect, SDL_FRect* dstrect) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderCopyF(texture, srcrect, dstrect);
+    return renderer->copyF(texture, srcrect, dstrect);
 }
 int GLSDL_RenderCopy(GLSDL_Renderer* renderer, GLSDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect) {
     GLSDL_Renderer::assertGL_SaveStateExists();
-    return renderer->renderCopy(texture, srcrect, dstrect);
+    return renderer->copy(texture, srcrect, dstrect);
 }
 int GLSDL_SetRenderTarget(GLSDL_Renderer* renderer, GLSDL_Texture* texture) {
     GLSDL_Renderer::assertGL_SaveStateExists();
