@@ -40,6 +40,14 @@ GLSDL_Renderer::GLSDL_Renderer(GLSDL_Window* window, int index, uint32_t flags)
         }
     }
 
+    sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, flags);
+    if(!sdlRenderer) {
+        failedConstruction = true;
+        std::string err = SDL_GetError();
+        Log::error(__PRETTY_FUNCTION__, "SDL_CreateRenderer error: %s", err.c_str());
+        assert(false);
+    }
+
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     //Create GL_Context
     if(!failedConstruction) {
@@ -73,6 +81,7 @@ GLSDL_Renderer::~GLSDL_Renderer() {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     if(sdrDefault2D) delete sdrDefault2D;
     SDL_GL_DeleteContext(sdlGlCtx);
+    SDL_DestroyRenderer(sdlRenderer);
     return;
 #endif
     assert(false);

@@ -15,7 +15,6 @@ public:
     ~GLSDL_Renderer();
 
     bool hasFailedConstruction() const;
-    //SDL_Renderer* toSDL_Renderer() const;
     SDL_GLContext getSDL_GLContext() const;
     int getRenderDrawBlendMode(SDL_BlendMode* sdlBlendMode) const;
     int getRenderDrawColor(uint8_t* r, uint8_t* g, uint8_t* b, uint8_t* a) const;
@@ -92,7 +91,7 @@ private:
     SDL_GLContext sdlGlCtx = nullptr;
 #endif
     SDL_Window* sdlWindow = nullptr;
-    //SDL_Renderer* sdlRenderer = nullptr;
+    SDL_Renderer* sdlRenderer = nullptr;
     bool failedConstruction = false;
 
 #if NCH_GLSDL_OPENGL_BACKEND>=1
