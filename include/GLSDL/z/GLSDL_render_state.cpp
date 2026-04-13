@@ -298,7 +298,7 @@ void GLSDL_Renderer::vpUpdate() {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     //Update renderer viewport
     if(sdlWindow) {
-        SDL_GetWindowSize(sdlWindow, &windowW, &windowH);
+        GLSDL_GetWindowSize(sdlWindow, &windowW, &windowH);
         //Fix effective render rect in case window size changes.
         GLSDL_Texture* glsdlTex = reinterpret_cast<GLSDL_Texture*>(renderTarget);
         if(glsdlTex==nullptr) {

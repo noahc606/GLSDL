@@ -14,4 +14,6 @@ private:
 };
 
 GLSDL_Window* GLSDL_CreateWindow(const std::string& title, int x, int y, int w, int h, uint32_t flags);
+void GLSDL_GetWindowSize(SDL_Window* window, int* w, int* h);
+void GLSDL_GetWindowSize(GLSDL_Window* glsdlWindow, int* w, int* h);
 #endif

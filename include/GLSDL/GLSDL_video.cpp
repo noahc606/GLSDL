@@ -26,4 +26,11 @@ GLSDL_Window* GLSDL_CreateWindow(const std::string& title, int x, int y, int w, 
     return ret;
 }
 
+void GLSDL_GetWindowSize(SDL_Window* window, int* w, int* h) {
+    SDL_GetWindowSize(window, w, h);
+}
+void GLSDL_GetWindowSize(GLSDL_Window* glsdlWindow, int* w, int* h) {
+    GLSDL_GetWindowSize(glsdlWindow->toSDL_Window(), w, h);
+}
+
 #endif

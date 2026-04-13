@@ -18,7 +18,6 @@ using namespace nch;
 std::string basePath = "";
 GLSDL_Renderer* glsdlRend = nullptr;
 GLSDL_Window* glsdlWin = nullptr;
-GLSDL_Shader* sdrDefault2D_Tex = nullptr, *sdrDefault3D = nullptr;
 TTF_Font* bteFont = nullptr;
 GLSDL_Texture* texC = nullptr;
 GLSDL_Texture* texSquare0 = nullptr;
@@ -46,10 +45,10 @@ bool clipping = false;
 int64_t numTicks = 0;
 
 int Main::getWidth() {
-    int ret; SDL_GetWindowSize(glsdlWin->toSDL_Window(), &ret, NULL); return ret;
+    int ret; GLSDL_GetWindowSize(glsdlWin, &ret, NULL); return ret;
 }
 int Main::getHeight() {
-    int ret; SDL_GetWindowSize(glsdlWin->toSDL_Window(), NULL, &ret); return ret;
+    int ret; GLSDL_GetWindowSize(glsdlWin, NULL, &ret); return ret;
 }
 std::string Main::getBasePath() {
     return basePath;
@@ -120,28 +119,24 @@ Main::Main()
             dst0 = {1, 1, 30, 30};
             GLSDL_RenderSetViewport(glsdlRend, &dst0);
             GLSDL_RenderGetViewport(glsdlRend, &vp);              Log::log("VP-tl: %d %d %d %d", dst0.x, dst0.y, dst0.w, dst0.h);
-            try { er = glsdlRend->getEffectiveRenderTargetRect(); Log::log("ER-tl: %d %d %d %d", dst0.x, dst0.y, dst0.w, dst0.h); } catch(...){}
             GLSDL_SetRenderDrawColor(glsdlRend, 255, 0, 0, 255);
             GLSDL_RenderFillRect(glsdlRend, NULL);
             //Blue top right
             dst0 = {33, 1, 30, 30};
             GLSDL_RenderSetViewport(glsdlRend, &dst0);
             GLSDL_RenderGetViewport(glsdlRend, &vp);              Log::log("VP-tr: %d %d %d %d", dst0.x, dst0.y, dst0.w, dst0.h);
-            try { er = glsdlRend->getEffectiveRenderTargetRect(); Log::log("ER-tr: %d %d %d %d", dst0.x, dst0.y, dst0.w, dst0.h); } catch(...){}
             GLSDL_SetRenderDrawColor(glsdlRend, 0, 0, 191, 255);
             GLSDL_RenderFillRect(glsdlRend, NULL);
             //Yellow bottom left
             dst0 = {1, 33, 30, 30};
             GLSDL_RenderSetViewport(glsdlRend, &dst0);
             GLSDL_RenderGetViewport(glsdlRend, &vp);              Log::log("VP-bl: %d %d %d %d", dst0.x, dst0.y, dst0.w, dst0.h);
-            try { er = glsdlRend->getEffectiveRenderTargetRect(); Log::log("ER-bl: %d %d %d %d", dst0.x, dst0.y, dst0.w, dst0.h); } catch(...){}
             GLSDL_SetRenderDrawColor(glsdlRend, 255, 255, 0, 255);
             GLSDL_RenderFillRect(glsdlRend, NULL);
             //Geometry bottom right
             dst0 = {33, 33, 30, 30};
             GLSDL_RenderSetViewport(glsdlRend, &dst0);
             GLSDL_RenderGetViewport(glsdlRend, &vp);              Log::log("VP-br: %d %d %d %d", dst0.x, dst0.y, dst0.w, dst0.h);
-            try { er = glsdlRend->getEffectiveRenderTargetRect(); Log::log("ER-br: %d %d %d %d", dst0.x, dst0.y, dst0.w, dst0.h); } catch(...){}
             GLSDL_RenderGeometry(glsdlRend, texSquare0, rtGeoVerts, geoNumVerts, geoInds, geoNumInds);        
 
             GLSDL_RenderSetViewport(glsdlRend, NULL);
@@ -163,11 +158,7 @@ Main::Main()
 
     MainLoopDriver mld(tick, 50, draw, 1000, events);
 }
-Main::~Main()
-{
-    delete sdrDefault2D_Tex;
-    delete sdrDefault3D;
-}
+Main::~Main(){}
 int main(int argc, char** args)
 { Main m; return 0; }
 
@@ -376,7 +367,6 @@ void Main::draw2D() {
     GLSDL_RenderPresent(glsdlRend);
 }
 void Main::draw3D() {
-    sdrDefault3D->useProgram();
     glEnable(GL_DEPTH_TEST);    //Depth testing
 }
 

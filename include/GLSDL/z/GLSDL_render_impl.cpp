@@ -353,7 +353,7 @@ void GLSDL_Renderer::renderPresent() {
 #else
     SDL_RenderPresent(sdlRenderer);
 #endif
-    
+
 }
 
 SDL_Surface* GLSDL_Renderer::surfaceReadPixels(GLuint objID, int objW, int objH, int objBytesPerPx) {
@@ -634,14 +634,19 @@ int GLSDL_Renderer::fillRectF(SDL_FRect* rect)
         dst = { rect->x, rect->y, rect->w, rect->h };
         dst.y = (float)getRenderTargetH()-dst.y-dst.h;
     }
-
+    //Fix upside down texture to texture rendering
+    if(renderTarget!=nullptr) {
+        dst.y = getRenderTargetH()-dst.y;
+        dst.h *= -1;
+    }
+    
     // Define the rectangle's vertices based on the given parameters
     const glm::vec4& rdr = renderDrawColor;
     std::vector<GLfloat> verts = {
-        dst.x,       dst.y,       rdr.r, rdr.g, rdr.b, rdr.a,
-        dst.x+dst.w, dst.y,       rdr.r, rdr.g, rdr.b, rdr.a,
-        dst.x+dst.w, dst.y+dst.h, rdr.r, rdr.g, rdr.b, rdr.a,
-        dst.x,       dst.y+dst.h, rdr.r, rdr.g, rdr.b, rdr.a
+        dst.x,       dst.y,         rdr.r, rdr.g, rdr.b, rdr.a,
+        dst.x+dst.w, dst.y,         rdr.r, rdr.g, rdr.b, rdr.a,
+        dst.x+dst.w, dst.y+dst.h,   rdr.r, rdr.g, rdr.b, rdr.a,
+        dst.x,       dst.y+dst.h,   rdr.r, rdr.g, rdr.b, rdr.a,
     };
     std::vector<GLuint> indices = { 0, 1, 2, 2, 3, 0 };
     translateVerts(renderTarget, getRenderTargetViewport(), verts.data(), 4, 6);
@@ -704,14 +709,19 @@ int GLSDL_Renderer::drawRectF(SDL_FRect* rect)
         dst = { rect->x, rect->y, rect->w, rect->h };
         dst.y = (float)getRenderTargetH()-dst.y-dst.h;
     }
+    //Fix upside down texture to texture rendering
+    if(renderTarget!=nullptr) {
+        dst.y = getRenderTargetH()-dst.y;
+        dst.h *= -1;
+    }
 
     //Define vertices and indices
     const glm::vec4& rdr = renderDrawColor;
     std::vector<GLfloat> verts = {
         dst.x+1,     dst.y,         rdr.r, rdr.g, rdr.b, rdr.a,
         dst.x+dst.w, dst.y,         rdr.r, rdr.g, rdr.b, rdr.a,
-        dst.x+dst.w, dst.y+dst.h-1, rdr.r, rdr.g, rdr.b, rdr.a,
-        dst.x+1,     dst.y+dst.h,   rdr.r, rdr.g, rdr.b, rdr.a,
+        dst.x+dst.w, dst.y+dst.h+1, rdr.r, rdr.g, rdr.b, rdr.a,
+        dst.x,       dst.y+dst.h+1, rdr.r, rdr.g, rdr.b, rdr.a,
     };
     std::vector<GLuint> indices = { 0, 1, 1, 2, 2, 3, 3, 0 };
     translateVerts(renderTarget, getRenderTargetViewport(), verts.data(), 4, 6);
