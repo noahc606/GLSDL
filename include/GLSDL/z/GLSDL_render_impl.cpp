@@ -36,14 +36,7 @@ GLSDL_Renderer::GLSDL_Renderer(GLSDL_Window* window, int index, uint32_t flags)
         sdlWindow = window->toSDL_Window();
         if(window==nullptr) {
             failedConstruction = true;
-        }
-    }
-
-    //Create SDL_Renderer
-    if(!failedConstruction) {
-        sdlRenderer = SDL_CreateRenderer(sdlWindow, index, flags);
-        if(sdlRenderer==nullptr) {
-            failedConstruction = true;
+	        assert(false);
         }
     }
 
@@ -53,6 +46,9 @@ GLSDL_Renderer::GLSDL_Renderer(GLSDL_Window* window, int index, uint32_t flags)
         sdlGlCtx = SDL_GL_CreateContext(sdlWindow);
         if(sdlGlCtx==nullptr) {
             failedConstruction = true;
+            std::string err = SDL_GetError();
+            Log::error(__PRETTY_FUNCTION__, "SDL_GL_CreateContext error: %s", err.c_str());
+            assert(false);
         }
     }
     //Init GLEW
@@ -61,11 +57,15 @@ GLSDL_Renderer::GLSDL_Renderer(GLSDL_Window* window, int index, uint32_t flags)
         if(glewInit()!=GLEW_OK) {
             Log::errorv(__PRETTY_FUNCTION__, "glewInit()", "Failed to inititalize GLEW");
             failedConstruction = true;
+	    assert(false);
         }
     } 
     //Create default 2D shader
     if(!failedConstruction) {
         sdrDefault2D = GLSDL_Shader::createDefault2D_TexOrSolid();
+        if(!sdrDefault2D) {
+     	    assert(false);
+        }
     }
 #endif
 }
@@ -73,15 +73,13 @@ GLSDL_Renderer::~GLSDL_Renderer() {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     if(sdrDefault2D) delete sdrDefault2D;
     SDL_GL_DeleteContext(sdlGlCtx);
+    return;
 #endif
-    SDL_DestroyRenderer(sdlRenderer);
+    assert(false);
 }
 
 bool GLSDL_Renderer::hasFailedConstruction() const {
     return failedConstruction;
-}
-SDL_Renderer* GLSDL_Renderer::toSDL_Renderer() const {
-    return sdlRenderer;
 }
 SDL_GLContext GLSDL_Renderer::getSDL_GLContext() const {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
@@ -95,7 +93,7 @@ int GLSDL_Renderer::getRenderDrawBlendMode(SDL_BlendMode* sdlBlendMode) const {
     if(sdlBlendMode!=nullptr) *sdlBlendMode = renderDrawBlendMode;
     return 0;
 #else
-    return SDL_GetRenderDrawBlendMode(sdlRenderer, sdlBlendMode);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::getRenderDrawColor(uint8_t* r, uint8_t* g, uint8_t* b, uint8_t* a) const {
@@ -106,14 +104,14 @@ int GLSDL_Renderer::getRenderDrawColor(uint8_t* r, uint8_t* g, uint8_t* b, uint8
     if(a!=nullptr) *a = renderDrawColor.a*255.f;
     return 0;
 #else
-    return SDL_GetRenderDrawColor(sdlRenderer, r, g, b, a);
+    assert(false);
 #endif
 }
 void* GLSDL_Renderer::getRenderTarget() const {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     return renderTarget;
 #else
-    return SDL_GetRenderTarget(sdlRenderer);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::getRenderTargetW() const {
@@ -140,7 +138,7 @@ SDL_Rect GLSDL_Renderer::getRenderTargetClipRect() const {
     if(renderTarget==nullptr) { return ntgtRenderClipRect; }
     else                      { return reinterpret_cast<GLSDL_Texture*>(renderTarget)->getRenderClipRect(); }
 #else
-    SDL_Rect ret; SDL_RenderGetClipRect(sdlRenderer, &ret); return ret;
+    assert(false);
 #endif
 }
 bool GLSDL_Renderer::isRenderTargetClipEnabled() const {
@@ -148,7 +146,7 @@ bool GLSDL_Renderer::isRenderTargetClipEnabled() const {
     if(renderTarget==nullptr) { return ntgtRenderClipEnabled; }
     else                      { return reinterpret_cast<GLSDL_Texture*>(renderTarget)->isRenderClipEnabled(); }
 #else
-    return SDL_RenderIsClipEnabled(sdlRenderer);
+    assert(false);
 #endif
 }
 SDL_Rect GLSDL_Renderer::getRenderTargetViewport() const {
@@ -159,9 +157,7 @@ SDL_Rect GLSDL_Renderer::getRenderTargetViewport() const {
     if(renderTarget==nullptr) { return ntgtRenderViewport; }
     else                      { return reinterpret_cast<GLSDL_Texture*>(renderTarget)->getRenderViewport(); }
 #else
-    SDL_Rect ret;
-    SDL_RenderGetClipRect(sdlRenderer, &ret);
-    return ret;
+    assert(false);
 #endif
 }
 bool GLSDL_Renderer::isRenderTargetViewportEnabled() const {
@@ -169,7 +165,7 @@ bool GLSDL_Renderer::isRenderTargetViewportEnabled() const {
     if(renderTarget==nullptr) { return ntgtRenderViewportEnabled; }
     else                      { return reinterpret_cast<GLSDL_Texture*>(renderTarget)->isRenderViewportEnabled(); }
 #else
-    return SDL_RenderIsClipEnabled(sdlRenderer);
+    assert(false);
 #endif
 }
 SDL_Rect GLSDL_Renderer::getEffectiveRenderTargetRect() const {
@@ -344,14 +340,14 @@ int GLSDL_Renderer::renderClear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear
     return 0;
 #else
-    return SDL_RenderClear(sdlRenderer);
+    assert(false);
 #endif
 }
 void GLSDL_Renderer::renderPresent() {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     SDL_GL_SwapWindow(sdlWindow);
 #else
-    SDL_RenderPresent(sdlRenderer);
+    assert(false);
 #endif
 
 }
@@ -498,7 +494,7 @@ int GLSDL_Renderer::renderReadPixels(const SDL_Rect* rect, uint32_t format, void
     SDL_FreeSurface(retSurf);
     return ret;
 #else
-    return SDL_RenderReadPixels(sdlRenderer, rect, format, pixels, pitch);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::setRenderDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
@@ -507,7 +503,7 @@ int GLSDL_Renderer::setRenderDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t 
     renderDrawColor = { r/255.0f, g/255.0f, b/255.0f, a/255.0f };
     return 0;
 #else
-    return SDL_SetRenderDrawColor(sdlRenderer, r, g, b, a);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::setRenderDrawBlendMode(SDL_BlendMode sdlBlendMode) {
@@ -515,7 +511,7 @@ int GLSDL_Renderer::setRenderDrawBlendMode(SDL_BlendMode sdlBlendMode) {
     renderDrawBlendMode = sdlBlendMode;
     return 0;
 #else
-    return SDL_SetRenderDrawBlendMode(sdlRenderer, sdlBlendMode);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::setRenderTarget(void* texture) {
@@ -537,10 +533,7 @@ int GLSDL_Renderer::setRenderTarget(void* texture) {
     }
     return 0;
 #else
-    if(texture==nullptr) {
-        return SDL_SetRenderTarget(sdlRenderer, nullptr);
-    }
-    return SDL_SetRenderTarget(sdlRenderer, reinterpret_cast<GLSDL_Texture*>(texture)->toSDL_Texture());
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::setRenderTargetClipRect(const SDL_Rect* rect) {
@@ -579,7 +572,7 @@ int GLSDL_Renderer::setRenderTargetClipRect(const SDL_Rect* rect) {
 
     return 0;
 #else
-    return SDL_RenderSetClipRect(sdlRenderer, rect);    
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::setRenderTargetViewport(const SDL_Rect* rect) {
@@ -616,7 +609,7 @@ int GLSDL_Renderer::setRenderTargetViewport(const SDL_Rect* rect) {
     }
     return 0;
 #else
-    return SDL_RenderSetViewport(sdlRenderer, rect);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::fillRectF(SDL_FRect* rect)
@@ -677,11 +670,7 @@ int GLSDL_Renderer::fillRectF(SDL_FRect* rect)
     glDeleteBuffers(1, &glEBO);
     if(draw) return 0; return -1;
 #else
-    if(rect==nullptr) { return SDL_RenderFillRectF(sdlRenderer, nullptr); }
-    else {
-        SDL_FRect sdlRect = { rect->x, rect->y, rect->w, rect->h };
-        return SDL_RenderFillRectF(sdlRenderer, &sdlRect);
-    }
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::fillRect(SDL_Rect* rect) {
@@ -691,7 +680,7 @@ int GLSDL_Renderer::fillRect(SDL_Rect* rect) {
         return fillRectF(&dst);
     }
 #else
-    return SDL_RenderFillRect(sdlRenderer, rect);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::drawRectF(SDL_FRect* rect)
@@ -752,7 +741,7 @@ int GLSDL_Renderer::drawRectF(SDL_FRect* rect)
     glDeleteBuffers(1, &glEBO);
     if(draw) return 0; return -1;
 #else
-    return SDL_RenderDrawRectF(sdlRenderer, rect);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::drawRect(SDL_Rect* rect)
@@ -763,7 +752,7 @@ int GLSDL_Renderer::drawRect(SDL_Rect* rect)
         return drawRectF(&dst);
     }
 #else
-    return SDL_RenderDrawRect(sdlRenderer, rect);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::drawLineF(float x1, float y1, float x2, float y2) {
@@ -808,14 +797,14 @@ int GLSDL_Renderer::drawLineF(float x1, float y1, float x2, float y2) {
     glDeleteBuffers(1, &glEBO);
     if(draw) return 0; return -1;
 #else
-    return SDL_RenderDrawLineF(sdlRenderer, x1, y1, x2, y2);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::drawLine(int x1, int y1, int x2, int y2) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     return drawLineF(x1, y1, x2, y2);
 #else
-    return SDL_RenderDrawLine(sdlRenderer, x1, y1, x2, y2);    
+    assert(false);  
 #endif
 }
 int GLSDL_Renderer::drawPointF(float x, float y) {
@@ -858,14 +847,14 @@ int GLSDL_Renderer::drawPointF(float x, float y) {
     glDeleteBuffers(1, &glEBO);
     if(draw) return 0; return -1;
 #else
-    return SDL_RenderDrawPointF(sdlRenderer, x, y);    
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::drawPoint(int x, int y) {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     return drawPointF(x, y);
 #else
-    return SDL_RenderDrawPoint(sdlRenderer, x, y);    
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::copyExF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect, double angle, SDL_FPoint* center, SDL_RendererFlip flip) {
@@ -953,7 +942,7 @@ int GLSDL_Renderer::copyExF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect
         dst = { dstrect->x, dstrect->y, dstrect->w, dstrect->h };
         d = &dst;
     }
-    return SDL_RenderCopyExF(sdlRenderer, reinterpret_cast<GLSDL_Texture*>(texture)->toSDL_Texture(), s, d, angle, center, flip);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::copyEx(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, double angle, SDL_Point* center, SDL_RendererFlip flip) {
@@ -1031,7 +1020,7 @@ int GLSDL_Renderer::copyEx(void* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, 
     glDeleteBuffers(1, &glEBO);
     if(draw) return 0; return -1;
 #else
-    return SDL_RenderCopyEx(sdlRenderer, reinterpret_cast<GLSDL_Texture*>(texture)->toSDL_Texture(), srcrect, dstrect, angle, center, flip);
+    assert(false);
 #endif
 }
 int GLSDL_Renderer::copyF(void* texture, SDL_Rect* srcrect, SDL_FRect* dstrect) {
@@ -1112,10 +1101,7 @@ int GLSDL_Renderer::geo(void* texture, const SDL_Vertex* vertices, int numVerts,
     glDeleteBuffers(1, &glEBO);
     if(draw) return 0; return -1;
 #else
-    if(texture==nullptr) {
-        return SDL_RenderGeometry(sdlRenderer, nullptr, vertices, numVerts, indices, numInds);
-    }
-    return SDL_RenderGeometry(sdlRenderer, reinterpret_cast<GLSDL_Texture*>(texture)->toSDL_Texture(), vertices, numVerts, indices, numInds);
+    assert(false);
 #endif
 }
 
@@ -1141,14 +1127,7 @@ GLSDL_Texture::GLSDL_Texture(GLSDL_Renderer* glsdlRenderer, SDL_Surface* surface
         SDL_FreeSurface(finalSurf);
 	} glBindTexture(GL_TEXTURE_2D, 0);
 #else
-    sdlRenderer = glsdlRenderer->toSDL_Renderer();
-    if(sdlRenderer==nullptr) {
-        failedConstruction = true; return;
-    }    
-    sdlTexture = SDL_CreateTextureFromSurface(glsdlRenderer->toSDL_Renderer(), surface);
-    if(sdlTexture==nullptr) {
-        failedConstruction = true; return;
-    }
+    assert(false);
 #endif
 
 }
@@ -1157,14 +1136,7 @@ GLSDL_Texture::GLSDL_Texture(GLSDL_Renderer* glsdlRenderer, uint32_t format, int
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     createGL_Texture(format, access, w, h);
 #else
-    sdlRenderer = glsdlRenderer->toSDL_Renderer();
-    if(sdlRenderer==nullptr) {
-        failedConstruction = true; return;
-    }
-    sdlTexture = SDL_CreateTexture(sdlRenderer, format, access, w, h);
-    if(sdlTexture==nullptr) {
-        failedConstruction = true; return;
-    }
+    assert(false);
 #endif
 }
 GLSDL_Texture::~GLSDL_Texture() {

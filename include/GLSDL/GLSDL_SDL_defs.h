@@ -10,6 +10,7 @@
 #define GLSDL_Quit SDL_Quit
 #define GLSDL_CreateWindow SDL_CreateWindow
 #define GLSDL_GetWindowSize SDL_GetWindowSize
+#define GLSDL_GetWindowFlags SDL_GetWindowFlags
 
 #define GLSDL_GL_SaveState(...) ((void)0)
 #define GLSDL_GL_RestoreState(...) ((void)0)

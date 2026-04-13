@@ -70,9 +70,16 @@ Main::Main()
         title = "GL Implementation of SDL Renderer";
     #endif
     glsdlWin = GLSDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480,  SDL_WINDOW_RESIZABLE);
+    {
+        Uint32 flags = GLSDL_GetWindowFlags(glsdlWin);
+        Log::log("Window flags: %d. IsGL: %d", flags, (flags & SDL_WINDOW_OPENGL) != 0);
+    }
+    
     glsdlRend = GLSDL_CreateRenderer(glsdlWin, -1, SDL_RENDERER_ACCELERATED);
     if(glsdlRend==nullptr) {
-        Log::errorv(__PRETTY_FUNCTION__, "GLSDL_CreateRenderer", "Failed to create GLSDL_Renderer.");
+        Log::errorv(__PRETTY_FUNCTION__, "GLSDL_CreateRenderer", "Failed to create GLSDL_Renderer: %s", SDL_GetError());
+        Uint32 flags = GLSDL_GetWindowFlags(glsdlWin);
+        Log::log("Window flags: %d. IsGL: %d", flags, (flags & SDL_WINDOW_OPENGL) != 0);
     }
 
     bteFont = TTF_OpenFont((basePath+"/BackToEarth.ttf").c_str(), 100);

@@ -11,10 +11,10 @@ SDL_Window* GLSDL_Window::toSDL_Window() {
 
 GLSDL_Window* GLSDL_CreateWindow(const std::string& title, int x, int y, int w, int h, uint32_t flags)
 {
-    uint32_t flagsMod = flags;
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     flags = flags | SDL_WINDOW_OPENGL;
 #endif
+    uint32_t flagsMod = flags;
 
     SDL_Window* sdlWin = SDL_CreateWindow(title.c_str(), x, y, w, h, flagsMod);
 
@@ -31,6 +31,12 @@ void GLSDL_GetWindowSize(SDL_Window* window, int* w, int* h) {
 }
 void GLSDL_GetWindowSize(GLSDL_Window* glsdlWindow, int* w, int* h) {
     GLSDL_GetWindowSize(glsdlWindow->toSDL_Window(), w, h);
+}
+Uint32 GLSDL_GetWindowFlags(SDL_Window* window) {
+    return SDL_GetWindowFlags(window);
+}
+Uint32 GLSDL_GetWindowFlags(GLSDL_Window* glsdlWindow) {
+    return GLSDL_GetWindowFlags(glsdlWindow->toSDL_Window());
 }
 
 #endif
