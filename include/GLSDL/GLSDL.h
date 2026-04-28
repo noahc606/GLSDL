@@ -1,5 +1,6 @@
 #pragma once
 #ifdef NCH_GLSDL_OPENGL_BACKEND
+#include <SDL2/SDL.h>
 #include <cstdint>
 #include "GLSDL_render.h"
 #include "GLSDL_shader.h"
