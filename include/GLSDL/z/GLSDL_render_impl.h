@@ -24,6 +24,7 @@ public:
     SDL_Rect getRenderTargetClipRect() const; bool isRenderTargetClipEnabled() const;
     SDL_Rect getRenderTargetViewport() const; bool isRenderTargetViewportEnabled() const;
     SDL_Rect getEffectiveRenderTargetRect() const;
+    static bool isGL_SaveStated();
     static void transformQuadVertsF(int rtH, float* verts, int stride, float angleDegrees, SDL_FPoint* center, SDL_RendererFlip flip);
     static void transformQuadVertsI(int rtH, float* verts, int stride, float angleDegrees, SDL_Point* center, SDL_RendererFlip flip);
     static void translateVerts(void* renderTarget, const SDL_Rect& viewport, float* verts, int numVerts, int stride);

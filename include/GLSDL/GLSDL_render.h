@@ -4,6 +4,8 @@
 
 void GLSDL_GL_SaveState(GLSDL_Renderer* renderer);
 void GLSDL_GL_RestoreState(GLSDL_Renderer* renderer);
+bool GLSDL_GL_IsSaveStated();
+
 GLSDL_Renderer* GLSDL_CreateRenderer(GLSDL_Window* window, int index, uint32_t flags);
 int GLSDL_RenderClear(GLSDL_Renderer* renderer);
 void GLSDL_RenderPresent(GLSDL_Renderer* renderer);

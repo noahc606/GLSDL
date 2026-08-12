@@ -14,6 +14,7 @@
 
 #define GLSDL_GL_SaveState(...) ((void)0)
 #define GLSDL_GL_RestoreState(...) ((void)0)
+#define GLSDL_GL_IsSaveStated() ((void)0)
 
 #define GLSDL_CreateRenderer SDL_CreateRenderer
 #define GLSDL_RenderClear SDL_RenderClear

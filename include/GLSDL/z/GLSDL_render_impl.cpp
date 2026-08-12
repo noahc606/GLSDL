@@ -185,6 +185,10 @@ SDL_Rect GLSDL_Renderer::getEffectiveRenderTargetRect() const {
     throw std::invalid_argument("Function only usable with NCH_GLSDL_OPENGL_BACKEND=1");
 #endif
 }
+bool GLSDL_Renderer::isGL_SaveStated() {
+    return glSaveStateExists;
+}
+
 void GLSDL_Renderer::transformQuadVertsF(int rtH, GLfloat* verts, int stride, float angleDegrees, SDL_FPoint* center, SDL_RendererFlip flip) {
     SDL_FPoint cent;
     SDL_FPoint topLeft;
@@ -737,7 +741,7 @@ int GLSDL_Renderer::drawRectF(SDL_FRect* rect)
         if(setGL_BlendFuncState(renderDrawBlendMode)) {
             setGL_ScissorState(this);
             glBindVertexArray(glVAO); {
-                glDrawElements(GL_LINES, sizeof(indices), GL_UNSIGNED_INT, 0);
+                glDrawElements(GL_LINES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
                 draw = true;
             } glBindVertexArray(0);
         }
@@ -793,7 +797,7 @@ int GLSDL_Renderer::drawLineF(float x1, float y1, float x2, float y2) {
         if(setGL_BlendFuncState(renderDrawBlendMode)) {
             setGL_ScissorState(this);
             glBindVertexArray(glVAO); {
-                glDrawElements(GL_LINES, sizeof(indices), GL_UNSIGNED_INT, 0);
+                glDrawElements(GL_LINES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
                 draw = true;
             } glBindVertexArray(0);
         }
@@ -843,7 +847,7 @@ int GLSDL_Renderer::drawPointF(float x, float y) {
         if(setGL_BlendFuncState(renderDrawBlendMode)) {
             setGL_ScissorState(this);
             glBindVertexArray(glVAO); {
-                glDrawElements(GL_POINTS, sizeof(indices), GL_UNSIGNED_INT, 0);
+                glDrawElements(GL_POINTS, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
                 draw = true;
             } glBindVertexArray(0);
         }
@@ -1075,14 +1079,11 @@ int GLSDL_Renderer::geo(void* texture, const SDL_Vertex* vertices, int numVerts,
         if(glsdlTexture==nullptr) { buildGL_SolidRenderBuffers(glVAO, glVBO, glEBO, glVerts, vStride, glInds); }
         else                      { buildGL_TexedRenderBuffers(glVAO, glVBO, glEBO, glVerts, vStride, glInds); }
         setupRenderTargetSettings(renderTarget, glsdlTexture!=nullptr);
-        //Draw textured or solid
-        {
-            //Set blending only if textured
-            if(glsdlTexture) {
-                if(!setGL_BlendFuncState(glsdlTexture->getSDL_BlendMode())) {
-                    draw = false;
-                }
-            }
+        //Draw textured or solid.
+        //Blending: a texture's own mode when there is one, the renderer's draw blend mode otherwise -
+        //the same rule fillRect/drawLines follow. Setting it only for the textured case left solid
+        //geometry inheriting whatever blend state was last set, so its vertex alpha drew as opaque.
+        if(setGL_BlendFuncState(glsdlTexture!=nullptr ? glsdlTexture->getSDL_BlendMode() : renderDrawBlendMode)) {
             //Set scissor
             setGL_ScissorState(this);
             //Bind to tex only if textured
@@ -1097,7 +1098,7 @@ int GLSDL_Renderer::geo(void* texture, const SDL_Vertex* vertices, int numVerts,
             } glBindVertexArray(0);
             //Unbind from tex only if textured
             if(glsdlTexture) {
-                glBindTexture(GL_TEXTURE_2D, 0);            
+                glBindTexture(GL_TEXTURE_2D, 0);
             }
         }
 

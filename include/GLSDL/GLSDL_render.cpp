@@ -9,6 +9,10 @@ void GLSDL_GL_SaveState(GLSDL_Renderer* renderer) {
 void GLSDL_GL_RestoreState(GLSDL_Renderer* renderer) {
     renderer->glRestoreState();
 }
+bool GLSDL_GL_IsSaveStated() {
+    return GLSDL_Renderer::isGL_SaveStated();
+}
+
 GLSDL_Renderer* GLSDL_CreateRenderer(GLSDL_Window* window, int index, uint32_t flags) {
     GLSDL_Renderer* ret = new GLSDL_Renderer(window, index, flags);
     if(ret->hasFailedConstruction()) {
