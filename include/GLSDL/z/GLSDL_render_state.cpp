@@ -249,7 +249,7 @@ void GLSDL_Renderer::restoreGL_CullFaceState() {
 }
 void GLSDL_Renderer::saveGL_DepthTestState() {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
-    prevGL_CullFaceEnabled = glIsEnabled(GL_DEPTH_TEST);
+    prevGL_DepthTestEnabled = glIsEnabled(GL_DEPTH_TEST);
 #else
     throw std::invalid_argument("Function only usable with NCH_GLSDL_OPENGL_BACKEND=1");
 #endif
