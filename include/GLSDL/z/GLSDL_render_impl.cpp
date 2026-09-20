@@ -40,6 +40,17 @@ GLSDL_Renderer::GLSDL_Renderer(GLSDL_Window* window, int index, uint32_t flags)
         }
     }
 
+#if NCH_GLSDL_OPENGL_BACKEND>=1
+    //No SDL_Renderer here. Every GLSDL_Render* call is re-implemented over sdlGlCtx below and renderPresent() is
+    //SDL_GL_SwapWindow, so one would never be drawn with - and it is not inert. An SDL_Renderer on this window owns a
+    //SECOND, unshared GL context (none of the app's textures, FBOs or programs exist in it) and installs
+    //SDL_RendererEventWatch. On SDL_WINDOWEVENT_SIZE_CHANGED that watch resets its viewport and, unbatched, flushes at
+    //once - and the flush does SDL_GL_MakeCurrent onto SDL's context from inside SDL_PumpEvents, leaving every app GL
+    //call after it in the wrong context (GL_INVALID_OPERATION on the first FBO or texture it touches). Naming a driver
+    //through SDL_HINT_RENDER_DRIVER is itself what turned batching off, which is why the hint appeared to cause this.
+    //The window already carries SDL_WINDOW_OPENGL from GLSDL_CreateWindow, so the context below needs no renderer first.
+    (void)index; (void)flags;
+#else
     sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, flags);
     if(!sdlRenderer) {
         failedConstruction = true;
@@ -47,6 +58,7 @@ GLSDL_Renderer::GLSDL_Renderer(GLSDL_Window* window, int index, uint32_t flags)
         Log::error(__PRETTY_FUNCTION__, "SDL_CreateRenderer error: %s", err.c_str());
         assert(false);
     }
+#endif
 
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     //Create GL_Context
@@ -81,7 +93,7 @@ GLSDL_Renderer::~GLSDL_Renderer() {
 #if NCH_GLSDL_OPENGL_BACKEND>=1
     if(sdrDefault2D) delete sdrDefault2D;
     SDL_GL_DeleteContext(sdlGlCtx);
-    SDL_DestroyRenderer(sdlRenderer);
+    if(sdlRenderer) SDL_DestroyRenderer(sdlRenderer);
     return;
 #endif
     assert(false);
